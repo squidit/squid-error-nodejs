@@ -1,0 +1,14 @@
+{
+  "name": "squid-error",
+  "version": "1.0.0",
+  "description": "Factory que estende da Error e adiciona mais informações de contexto",
+  "main": "squid_error.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Henrique Martini <henrique.martini@squidit.com.br>",
+  "license": "ISC",
+  "dependencies": {
+  }
+}
