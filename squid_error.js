@@ -6,20 +6,15 @@ class SquidError extends Error
   {
     super(settings?.message || nativeError?.message || 'An error occurred and no error message was set.');
 
-    // Object.assign(this, nativeError, settings);
-
     this.nativeError = nativeError;
 
-    if (nativeError?.stack)
-      this.stack = nativeError.stack;
-    else
-      // Capture the current stacktrace and store it in the property "this.stack". By
-      // providing the implementationContext argument, we will remove the current
-      // constructor (or the optional factory function) line-item from the stacktrace; this
-      // is good because it will reduce the implementation noise in the stack property.
-      // --
-      // Rad More: https://code.google.com/p/v8-wiki/wiki/JavaScriptStackTraceApi#Stack_trace_collection_for_custom_exceptions
-      Error.captureStackTrace(this, (implementationContext || this.constructor));
+    // Capture the current stacktrace and store it in the property "this.stack". By
+    // providing the implementationContext argument, we will remove the current
+    // constructor (or the optional factory function) line-item from the stacktrace; this
+    // is good because it will reduce the implementation noise in the stack property.
+    // --
+    // Read More: https://code.google.com/p/v8-wiki/wiki/JavaScriptStackTraceApi#Stack_trace_collection_for_custom_exceptions
+    this.stack = settings?.stack || nativeError?.stack || Error.captureStackTrace(this, (implementationContext || this.constructor));
 
     // The parent constructor also sets the name property to "Error", so we reset it to the right value.
     this.name      = this.constructor.name;
