@@ -27,6 +27,7 @@ class SquidError extends Error
     this.detail    = settings?.detail || '';
     this.id        = settings?.id || 0;
     this.timeStamp = settings?.timeStamp || new Date();
+    this.skipLog   = settings?.skipLog || false;
 
     if (nativeError?.signal)  this.signal  = nativeError.signal;
     if (nativeError?.address) this.address = nativeError.address;
@@ -43,6 +44,12 @@ class SquidError extends Error
     this.detail = detail;
     return this;
   };
+
+  SetSkipLog (skipLog)
+  {
+    this.skipLog = skipLog;
+    return this;
+  }
 
   /*
   * This function dumps long stack traces for exceptions having a cause()
