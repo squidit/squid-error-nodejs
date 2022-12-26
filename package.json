@@ -9,8 +9,7 @@
   "keywords": [],
   "author": "Henrique Martini <henrique.martini@squidit.com.br>",
   "license": "ISC",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
