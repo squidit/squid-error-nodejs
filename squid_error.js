@@ -6,7 +6,7 @@ class SquidError extends Error
   {
     super(settings?.message || nativeError?.message || 'An error occurred and no error message was set.');
 
-    this.nativeError = nativeError;
+    this.nativeError = nativeError ? SquidError.SerializeNativeError(nativeError): null;
 
     const providedStack = settings?.stack || nativeError?.stack;
 
@@ -100,12 +100,13 @@ class SquidError extends Error
 
   static Serialize (error)
   {
-    if (error instanceof SquidError)
-      return error.Serialize();
-    else if (error instanceof Error)
-      return this.SerializeNativeError(error);
-    else
-      return error;
+    if(typeof error?.Serialize === 'function')
+    return error.Serialize();
+
+  if (Object.prototype.toString.call(error) === "[object Error]")
+    return SquidError.SerializeNativeError(error);
+
+  return error;
   }
 
   Serialize ()
