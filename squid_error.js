@@ -29,6 +29,8 @@ class SquidError extends Error
     this.timeStamp = settings?.timeStamp || new Date();
     this.skipLog   = settings?.skipLog || false;
 
+    this._isSquidError = true;
+
     if (nativeError?.signal)  this.signal  = nativeError.signal;
     if (nativeError?.address) this.address = nativeError.address;
     if (nativeError?.dest)    this.dest    = nativeError.dest;
@@ -50,6 +52,11 @@ class SquidError extends Error
     this.skipLog = skipLog;
     return this;
   }
+
+  get isSquidError ()
+  {
+    return this._isSquidError;
+  };
 
   /*
   * This function dumps long stack traces for exceptions having a cause()
@@ -101,12 +108,12 @@ class SquidError extends Error
   static Serialize (error)
   {
     if(typeof error?.Serialize === 'function')
-    return error.Serialize();
+      return error.Serialize();
 
-  if (Object.prototype.toString.call(error) === "[object Error]")
-    return SquidError.SerializeNativeError(error);
+    if (Object.prototype.toString.call(error) === "[object Error]")
+      return SquidError.SerializeNativeError(error);
 
-  return error;
+    return error;
   }
 
   Serialize ()
@@ -121,7 +128,25 @@ class SquidError extends Error
 
   static Create (settings, nativeError)
   {
-    return new SquidError(settings, nativeError, SquidError.Create);
+    return new this(settings, nativeError, this.Create);
+  }
+
+  static IsSquidError(error)
+  {
+    return (error?.isSquidError === true);
+  }
+
+  static ExactInstanceOf (error)
+  {
+    return (error instanceof this.constructor || error.constructor.name === this.name);
+  }
+
+  static Convert (error, onlyConvertNonSquidErrors = false)
+  {
+    if (onlyConvertNonSquidErrors)
+      return (this.IsSquidError(error)) ? error : this.Create(null, error)
+
+    return (this.ExactInstanceOf(error)) ? error : this.Create(null, error)
   }
 }
 
@@ -132,7 +157,6 @@ class SquidHttpError extends SquidError
     super(settings, nativeError, implementationContext);
 
     this.httpStatusCode = (settings?.httpStatusCode || 500);
-    // this.name = this.constructor.name
   }
 
   Serialize ()
@@ -141,11 +165,6 @@ class SquidHttpError extends SquidError
       ...super.Serialize(),
       httpStatusCode : this.httpStatusCode
     };
-  }
-
-  static Create (settings, nativeError)
-  {
-    return new SquidHttpError(settings, nativeError, SquidHttpError.Create);
   }
 
   SetHttpStatusCode (status)
