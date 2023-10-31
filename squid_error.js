@@ -42,7 +42,7 @@ class SquidError extends Error
     /** @type {string} */
     this.name      = this.constructor.name;
     /** @type {string} */
-    this.code      = settings?.code || ('code' in nativeError && typeof nativeError.code === 'string' && nativeError?.code) || 'ERROR_CODE_NOT_SET';
+    this.code      = settings?.code || (typeof nativeError === 'object' && 'code' in nativeError && typeof nativeError.code === 'string' && nativeError?.code) || 'ERROR_CODE_NOT_SET';
     /** @type {Record<string, unknown>} */
     this.detail    = settings?.detail || {};
     /** @type {number} */
@@ -54,7 +54,7 @@ class SquidError extends Error
 
     /** @type {boolean} @private */
     this._isSquidError = true;
-    if(nativeError) 
+    if(typeof nativeError === 'object') 
     {
       if ('signal'  in nativeError && nativeError?.signal)  this.signal  = nativeError.signal;
       if ('address' in nativeError && nativeError?.address) this.address = nativeError.address;
@@ -106,7 +106,7 @@ class SquidError extends Error
   {
     let fullErrorStack = error.stack || error.toString();
 
-    if ('cause' in error && error.cause && typeof (error.cause) === 'function')
+    if (typeof error === 'object' && 'cause' in error && error.cause && typeof (error.cause) === 'function')
     {
       const exceptionCause = error.cause();
 
@@ -125,21 +125,21 @@ class SquidError extends Error
     return {
       message : error.message,
       name    : error.name,
-      code    : 'code' in error && error.code,
+      code    : typeof error === 'object' && error && 'code' in error && error.code,
       ...(error.stack && { stack : this.GetFullErrorStack(error) }),
       // these are SystemError properties. Since NodeJS doesnt expose
       // the SystemError type, we cannot simply check for
       // if (err instanceof SystemError) and then add all
       // these properties at once. Thus, we need to check the existence
       // of each one individually
-      ...('signal'  in error && error.signal  && { signal  : error.signal  }),
-      ...('address' in error && error.address && { address : error.address }),
-      ...('dest'    in error && error.dest    && { dest    : error.dest    }),
-      ...('errno'   in error && error.errno   && { errno   : error.errno   }),
-      ...('info'    in error && error.info    && { info    : error.info    }),
-      ...('path'    in error && error.path    && { path    : error.path    }),
-      ...('port'    in error && error.port    && { port    : error.port    }),
-      ...('syscall' in error && error.syscall && { syscall : error.syscall })
+      ...(typeof error === 'object' && 'signal'  in error && error.signal  && { signal  : error.signal  }),
+      ...(typeof error === 'object' && 'address' in error && error.address && { address : error.address }),
+      ...(typeof error === 'object' && 'dest'    in error && error.dest    && { dest    : error.dest    }),
+      ...(typeof error === 'object' && 'errno'   in error && error.errno   && { errno   : error.errno   }),
+      ...(typeof error === 'object' && 'info'    in error && error.info    && { info    : error.info    }),
+      ...(typeof error === 'object' && 'path'    in error && error.path    && { path    : error.path    }),
+      ...(typeof error === 'object' && 'port'    in error && error.port    && { port    : error.port    }),
+      ...(typeof error === 'object' && 'syscall' in error && error.syscall && { syscall : error.syscall })
     };
   }
 
@@ -148,7 +148,7 @@ class SquidError extends Error
    */
   static Serialize (error)
   {
-    if('Serialize' in error && typeof error?.Serialize === 'function')
+    if(typeof error === 'object' && 'Serialize' in error && typeof error?.Serialize === 'function')
       return error.Serialize();
 
     if (Object.prototype.toString.call(error) === "[object Error]")
