@@ -1,7 +1,4 @@
 declare module "squid_error" {
-    /**
-     * SquidErrorSettings
-     */
     export type SquidErrorSettings = {
         message?: string;
         stack?: string;
@@ -18,7 +15,6 @@ declare module "squid_error" {
         httpStatusCode?: number;
     });
     /**
-     * SquidErrorSettings
      * @typedef {{ message?: string; stack?: string; code?: string; detail?: Record<string, unknown>; id?: number; timeStamp?: Date; skipLog?: boolean; }} SquidErrorSettings
      */
     /**
