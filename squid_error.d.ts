@@ -1,82 +1,171 @@
-declare module 'squid-error' {
-  export class SquidError extends Error {
-    static GetFullErrorStack(exception: any): any;
-    static SerializeNativeError(error: any): {
-      syscall: any;
-      port: any;
-      path: any;
-      info: any;
-      errno: any;
-      dest: any;
-      address: any;
-      signal: any;
-      stack: any;
-      message: any;
-      name: any;
-      code: any;
+declare module "squid_error" {
+    export type SquidErrorSettings = {
+        message?: string;
+        stack?: string;
+        code?: string;
+        detail?: Record<string, unknown>;
+        id?: number;
+        timeStamp?: Date;
+        skipLog?: boolean;
     };
-    static Serialize(error: any): any;
-    static Create(settings: any, nativeError: any): SquidError;
-    constructor(settings: any, nativeError: any, implementationContext: any);
-    nativeError: any;
-    stack: any;
-    code: any;
-    detail: any;
-    id: any;
-    timeStamp: any;
-    skipLog: any;
-    signal: any;
-    address: any;
-    dest: any;
-    errno: any;
-    info: any;
-    path: any;
-    port: any;
-    syscall: any;
-    SetDetail(detail: any): SquidError;
-    SetSkipLog(skipLog: any): SquidError;
-    Serialize(): {
-      id: any;
-      detail: any;
-      timeStamp: any;
-      syscall: any;
-      port: any;
-      path: any;
-      info: any;
-      errno: any;
-      dest: any;
-      address: any;
-      signal: any;
-      stack: any;
-      message: any;
-      name: any;
-      code: any;
-    };
-    static IsSquidError(error: any): boolean;
-    static ExactInstanceOf(error: any): boolean;
-    static Convert(error: any, onlyConvertNonSquidErrors?: boolean): any;
-  }
-
-  export class SquidHttpError extends SquidError {
-    constructor(settings: any, nativeError: any, implementationContext: any)
-    Serialize(): {
-      httpStatusCode: any;
-      id: any;
-      detail: any;
-      timeStamp: any;
-      syscall: any;
-      port: any;
-      path: any;
-      info: any;
-      errno: any;
-      dest: any;
-      address: any;
-      signal: any;
-      stack: any;
-      message: any;
-      name: any;
-      code: any;
-    };
-    SetHttpStatusCode(status: any): SquidHttpError;
-  }
+    /**
+     * SquidHttpErrorSettings
+     */
+    export type SquidHttpErrorSettings = (SquidErrorSettings & {
+        httpStatusCode?: number;
+    });
+    /**
+     * @typedef {{ message?: string; stack?: string; code?: string; detail?: Record<string, unknown>; id?: number; timeStamp?: Date; skipLog?: boolean; }} SquidErrorSettings
+     */
+    /**
+     * SquidHttpErrorSettings
+     * @typedef {(SquidErrorSettings & {httpStatusCode?: number})} SquidHttpErrorSettings
+     */
+    export class SquidError extends Error {
+        /**
+         * @param {Error} error
+         */
+        static GetFullErrorStack(error: Error): string;
+        /**
+         * @param {Error} error
+         */
+        static SerializeNativeError(error: Error): {
+            syscall: unknown;
+            port: unknown;
+            path: unknown;
+            info: unknown;
+            errno: unknown;
+            dest: unknown;
+            address: unknown;
+            signal: unknown;
+            stack: string;
+            message: string;
+            name: string;
+            code: unknown;
+        };
+        /**
+         * @param {Error} error
+         */
+        static Serialize(error: Error): any;
+        /**
+         *
+         * @param {SquidErrorSettings} settings
+         * @param {unknown} [nativeError] Erro original
+         * @returns
+         */
+        static Create(settings: SquidErrorSettings, nativeError?: unknown): SquidError;
+        /**
+         * @param {{ isSquidError?: boolean; }} error
+         */
+        static IsSquidError(error: {
+            isSquidError?: boolean;
+        }): boolean;
+        /**
+         * @param {unknown} error
+         */
+        static ExactInstanceOf(error: unknown): boolean;
+        /**
+         * @param {unknown} error
+         */
+        static Convert(error: unknown, onlyConvertNonSquidErrors?: boolean): unknown;
+        /**
+         * @param {SquidErrorSettings} settings
+         * @param {(Error | undefined)} nativeError
+         * @param {(...args: unknown[]) => unknown} implementationContext
+         */
+        constructor(settings: SquidErrorSettings, nativeError: (Error | undefined), implementationContext: (...args: unknown[]) => unknown);
+        nativeError: {
+            syscall: unknown;
+            port: unknown;
+            path: unknown;
+            info: unknown;
+            errno: unknown;
+            dest: unknown;
+            address: unknown;
+            signal: unknown;
+            stack: string;
+            message: string;
+            name: string;
+            code: unknown;
+        };
+        /** @type {string} */
+        code: string;
+        /** @type {Record<string, unknown>} */
+        detail: Record<string, unknown>;
+        /** @type {number} */
+        id: number;
+        /** @type {Date} */
+        timeStamp: Date;
+        /** @type {boolean} */
+        skipLog: boolean;
+        /** @type {boolean} @private */
+        private _isSquidError;
+        signal: unknown;
+        address: unknown;
+        dest: unknown;
+        errno: unknown;
+        info: unknown;
+        path: unknown;
+        port: unknown;
+        syscall: unknown;
+        /**
+         * @param {Record<string, unknown>} detail
+         */
+        SetDetail(detail: Record<string, unknown>): this;
+        /**
+         * @param {boolean} skipLog
+         */
+        SetSkipLog(skipLog: boolean): this;
+        get isSquidError(): boolean;
+        Serialize(): {
+            id: number;
+            detail: Record<string, unknown>;
+            timeStamp: Date;
+            syscall: unknown;
+            port: unknown;
+            path: unknown;
+            info: unknown;
+            errno: unknown;
+            dest: unknown;
+            address: unknown;
+            signal: unknown;
+            stack: string;
+            message: string;
+            name: string;
+            code: unknown;
+        };
+    }
+    export class SquidHttpError extends SquidError {
+        /**
+         * @param {SquidHttpErrorSettings} settings
+         * @param {Error} nativeError
+         * @param {any} implementationContext
+         */
+        constructor(settings: SquidHttpErrorSettings, nativeError: Error, implementationContext: any);
+        /** @type {number} */
+        httpStatusCode: number;
+        Serialize(): {
+            httpStatusCode: number;
+            id: number;
+            detail: Record<string, unknown>;
+            timeStamp: Date;
+            syscall: unknown;
+            port: unknown;
+            path: unknown;
+            info: unknown;
+            errno: unknown;
+            dest: unknown;
+            address: unknown;
+            signal: unknown;
+            stack: string;
+            message: string;
+            name: string;
+            code: unknown;
+        };
+        /**
+         * @param {number} status
+         */
+        SetHttpStatusCode(status: number): this;
+    }
 }
+//# sourceMappingURL=squid_error.d.ts.map

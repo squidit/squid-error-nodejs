@@ -1,0 +1,12 @@
+{
+  "include": [ "squid_error.js" ],
+  "compilerOptions": {
+    "allowJs": true, // reads JS files, as normally they are ignored as source files
+    "checkJs": true, // generates errors from JS files
+    "declaration": true, // generates d.ts 
+    "emitDeclarationOnly": true, // outputs *only* d.ts files
+    "declarationMap": true, // goes to js file instead of types when using IDE functions like "Go to Definition" in VSCode
+    "skipLibCheck": true, // skips checking files from other libraries
+    "outFile": "squid_error.js" // outputs to a single file
+  }
+}
