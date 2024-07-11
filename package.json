@@ -1,9 +1,10 @@
 {
   "name": "squid-error",
-  "version": "1.3.0",
+  "version": "1.6.0",
   "description": "Factory que estende da Error e adiciona mais informações de contexto",
   "main": "squid_error.js",
   "scripts": {
+    "build": "npx -p typescript tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

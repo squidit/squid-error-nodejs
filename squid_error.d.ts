@@ -8,17 +8,20 @@ declare module "squid_error" {
         timeStamp?: Date;
         skipLog?: boolean;
     };
-    /**
-     * SquidHttpErrorSettings
-     */
     export type SquidHttpErrorSettings = (SquidErrorSettings & {
         httpStatusCode?: number;
     });
     /**
-     * @typedef {{ message?: string; stack?: string; code?: string; detail?: Record<string, unknown>; id?: number; timeStamp?: Date; skipLog?: boolean; }} SquidErrorSettings
-     */
-    /**
-     * SquidHttpErrorSettings
+     * @typedef {{
+     * message?: string;
+     * stack?: string;
+     * code?: string;
+     * detail?: Record<string, unknown>;
+     * id?: number;
+     * timeStamp?: Date;
+     * skipLog?: boolean;
+     * }} SquidErrorSettings
+     *
      * @typedef {(SquidErrorSettings & {httpStatusCode?: number})} SquidHttpErrorSettings
      */
     export class SquidError extends Error {
@@ -70,10 +73,10 @@ declare module "squid_error" {
         static Convert(error: unknown, onlyConvertNonSquidErrors?: boolean): unknown;
         /**
          * @param {SquidErrorSettings} settings
-         * @param {(Error | undefined)} nativeError
-         * @param {(...args: unknown[]) => unknown} implementationContext
+         * @param {unknown} [nativeError]
+         * @param {(...args: unknown[]) => unknown} [implementationContext]
          */
-        constructor(settings: SquidErrorSettings, nativeError: (Error | undefined), implementationContext: (...args: unknown[]) => unknown);
+        constructor(settings: SquidErrorSettings, nativeError?: unknown, implementationContext?: (...args: unknown[]) => unknown);
         nativeError: {
             syscall: unknown;
             port: unknown;
@@ -138,10 +141,10 @@ declare module "squid_error" {
     export class SquidHttpError extends SquidError {
         /**
          * @param {SquidHttpErrorSettings} settings
-         * @param {Error} nativeError
-         * @param {any} implementationContext
+         * @param {unknown} [nativeError]
+         * @param {(...args: unknown[]) => unknown} [implementationContext]
          */
-        constructor(settings: SquidHttpErrorSettings, nativeError: Error, implementationContext: any);
+        constructor(settings: SquidHttpErrorSettings, nativeError?: unknown, implementationContext?: (...args: unknown[]) => unknown);
         /** @type {number} */
         httpStatusCode: number;
         Serialize(): {
