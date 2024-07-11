@@ -2,28 +2,34 @@
 // Reference: https://www.bennadel.com/blog/2828-creating-custom-error-objects-in-node-js-with-error-capturestacktrace.htm
 
 /**
- * @typedef {{ message?: string; stack?: string; code?: string; detail?: Record<string, unknown>; id?: number; timeStamp?: Date; skipLog?: boolean; }} SquidErrorSettings
- */
-
-/**
- * SquidHttpErrorSettings
+ * @typedef {{ 
+ * message?: string; 
+ * stack?: string; 
+ * code?: string; 
+ * detail?: Record<string, unknown>; 
+ * id?: number; 
+ * timeStamp?: Date; 
+ * skipLog?: boolean; 
+ * }} SquidErrorSettings
+ * 
  * @typedef {(SquidErrorSettings & {httpStatusCode?: number})} SquidHttpErrorSettings
  */
+
 
 class SquidError extends Error
 {
   /**
    * @param {SquidErrorSettings} settings
-   * @param {(Error | undefined)} nativeError
-   * @param {(...args: unknown[]) => unknown} implementationContext
+   * @param {unknown} [nativeError]
+   * @param {(...args: unknown[]) => unknown} [implementationContext]
    */
   constructor (settings, nativeError, implementationContext)
   {
-    super(settings?.message || nativeError?.message || 'An error occurred and no error message was set.');
+    super(settings?.message || extractStringField(nativeError, 'message') || 'An error occurred and no error message was set.');
 
-    this.nativeError = nativeError ? SquidError.SerializeNativeError(nativeError): null;
+    this.nativeError = nativeError && nativeError instanceof Error ? SquidError.SerializeNativeError(nativeError): null;
 
-    const providedStack = settings?.stack || nativeError?.stack;
+    const providedStack = settings?.stack || extractStringField(nativeError, 'stack');
 
 
     if (providedStack)
@@ -42,7 +48,7 @@ class SquidError extends Error
     /** @type {string} */
     this.name      = this.constructor.name;
     /** @type {string} */
-    this.code      = settings?.code || (typeof nativeError === 'object' && 'code' in nativeError && typeof nativeError.code === 'string' && nativeError?.code) || 'ERROR_CODE_NOT_SET';
+    this.code      = settings?.code || extractStringField(nativeError, 'code') || 'ERROR_CODE_NOT_SET';
     /** @type {Record<string, unknown>} */
     this.detail    = settings?.detail || {};
     /** @type {number} */
@@ -66,6 +72,8 @@ class SquidError extends Error
       if ('syscall' in nativeError && nativeError?.syscall) this.syscall = nativeError.syscall;
     }
   }
+
+
 
   /**
    * @param {Record<string, unknown>} detail
@@ -212,8 +220,8 @@ class SquidHttpError extends SquidError
 {
   /**
    * @param {SquidHttpErrorSettings} settings
-   * @param {Error} nativeError
-   * @param {any} implementationContext
+   * @param {unknown} [nativeError]
+   * @param {(...args: unknown[]) => unknown} [implementationContext]
    */
   constructor (settings, nativeError, implementationContext)
   {
@@ -240,5 +248,17 @@ class SquidHttpError extends SquidError
     return this;
   };
 }
+
+  /**
+   * @param {unknown} obj
+   * @param {string} field
+   * @returns {string | undefined}
+   */
+  function extractStringField(obj, field) {
+    if(obj && typeof obj === 'object' && field in obj && typeof obj[field] === 'string') 
+      return obj[field]
+
+    return undefined
+  }
 
 module.exports = { SquidError, SquidHttpError };
