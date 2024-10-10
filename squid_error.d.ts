@@ -140,6 +140,13 @@ declare module "squid_error" {
     }
     export class SquidHttpError extends SquidError {
         /**
+         *
+         * @param {SquidHttpErrorSettings} settings
+         * @param {unknown} [nativeError] Erro original
+         * @returns
+         */
+        static Create(settings: SquidHttpErrorSettings, nativeError?: unknown): SquidHttpError;
+        /**
          * @param {SquidHttpErrorSettings} settings
          * @param {unknown} [nativeError]
          * @param {(...args: unknown[]) => unknown} [implementationContext]
