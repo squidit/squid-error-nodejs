@@ -1,6 +1,6 @@
 {
   "name": "squid-error",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Factory que estende da Error e adiciona mais informações de contexto",
   "main": "squid_error.js",
   "scripts": {

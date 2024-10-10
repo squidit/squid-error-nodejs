@@ -2,16 +2,16 @@
 // Reference: https://www.bennadel.com/blog/2828-creating-custom-error-objects-in-node-js-with-error-capturestacktrace.htm
 
 /**
- * @typedef {{ 
- * message?: string; 
- * stack?: string; 
- * code?: string; 
- * detail?: Record<string, unknown>; 
- * id?: number; 
- * timeStamp?: Date; 
- * skipLog?: boolean; 
+ * @typedef {{
+ * message?: string;
+ * stack?: string;
+ * code?: string;
+ * detail?: Record<string, unknown>;
+ * id?: number;
+ * timeStamp?: Date;
+ * skipLog?: boolean;
  * }} SquidErrorSettings
- * 
+ *
  * @typedef {(SquidErrorSettings & {httpStatusCode?: number})} SquidHttpErrorSettings
  */
 
@@ -60,7 +60,7 @@ class SquidError extends Error
 
     /** @type {boolean} @private */
     this._isSquidError = true;
-    if(typeof nativeError === 'object') 
+    if(typeof nativeError === 'object')
     {
       if ('signal'  in nativeError && nativeError?.signal)  this.signal  = nativeError.signal;
       if ('address' in nativeError && nativeError?.address) this.address = nativeError.address;
@@ -176,10 +176,10 @@ class SquidError extends Error
   }
 
   /**
-   * 
-   * @param {SquidErrorSettings} settings 
+   *
+   * @param {SquidErrorSettings} settings
    * @param {unknown} [nativeError] Erro original
-   * @returns 
+   * @returns
    */
   static Create (settings, nativeError)
   {
@@ -231,6 +231,19 @@ class SquidHttpError extends SquidError
     this.httpStatusCode = (settings?.httpStatusCode || 500);
   }
 
+  /**
+   *
+   * @param {SquidHttpErrorSettings} settings
+   * @param {unknown} [nativeError] Erro original
+   * @returns
+   */
+    static Create (settings, nativeError)
+    {
+      const validatedError = nativeError instanceof Error ? nativeError : undefined;
+
+      return new this(settings, validatedError, this.Create);
+    }
+
   Serialize ()
   {
     return {
@@ -255,7 +268,7 @@ class SquidHttpError extends SquidError
    * @returns {string | undefined}
    */
   function extractStringField(obj, field) {
-    if(obj && typeof obj === 'object' && field in obj && typeof obj[field] === 'string') 
+    if(obj && typeof obj === 'object' && field in obj && typeof obj[field] === 'string')
       return obj[field]
 
     return undefined
