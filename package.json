@@ -1,22 +1,50 @@
 {
   "name": "squid-error",
+<<<<<<< Updated upstream
   "version": "1.7.0",
+=======
+  "version": "2.0.0",
+>>>>>>> Stashed changes
   "description": "Factory que estende da Error e adiciona mais informações de contexto",
-  "main": "squid_error.js",
+  "type": "module",
+  "main": "./dist/squid-error.cjs",
+  "types": "./dist/squid-error.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/squid-error.d.ts",
+      "import": "./dist/squid-error.js",
+      "require": "./dist/squid-error.cjs",
+      "default": "./dist/squid-error.js"
+    }
+  },
   "scripts": {
+<<<<<<< Updated upstream
     "build": "npx -p typescript tsc",
+=======
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "lint": "eslint .",
+>>>>>>> Stashed changes
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Henrique Martini <henrique.martini@squidit.com.br>",
   "license": "ISC",
+  "engines": {
+    "node": ">=20",
+    "npm": ">=8"
+  },
   "dependencies": {},
   "devDependencies": {
-    "babel-eslint": "^10.1.0",
-    "eslint": "^7.32.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.1"
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "@types/node": "^25.5.0",
+    "@typescript-eslint/parser": "^8.46.1",
+    "eslint": "^10.0.3",
+    "eslint-plugin-perfectionist": "^5.6.0",
+    "eslint-plugin-unicorn": "^63.0.0",
+    "globals": "^17.4.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3"
   }
 }

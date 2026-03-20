@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "include": [ "squid_error.js" ],
   "compilerOptions": {
     "allowJs": true, // reads JS files, as normally they are ignored as source files
@@ -10,3 +11,20 @@
     "outFile": "squid_error.js" // outputs to a single file
   }
 }
+=======
+  "include": ["squid-error.ts", "tsup.config.ts"],
+  "exclude": ["dist", "node_modules"],
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es2022",
+    "types": ["node"],
+    "verbatimModuleSyntax": true
+  }
+}
+>>>>>>> Stashed changes
