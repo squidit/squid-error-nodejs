@@ -1,10 +1,6 @@
 {
   "name": "squid-error",
-<<<<<<< Updated upstream
-  "version": "1.7.0",
-=======
   "version": "2.0.0",
->>>>>>> Stashed changes
   "description": "Factory que estende da Error e adiciona mais informações de contexto",
   "type": "module",
   "main": "./dist/squid-error.cjs",
@@ -18,13 +14,9 @@
     }
   },
   "scripts": {
-<<<<<<< Updated upstream
-    "build": "npx -p typescript tsc",
-=======
     "build": "tsup",
     "build:watch": "tsup --watch",
     "lint": "eslint .",
->>>>>>> Stashed changes
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
